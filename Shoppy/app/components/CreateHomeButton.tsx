@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, View, StyleSheet } from 'react-native';
 
 interface CreateButtonProps {
-  onPress: () => void; // Function to handle button press
+  onPress: () => void; 
 }
 
 const CreateHomeButton: React.FC<CreateButtonProps> = ({ onPress }) => {

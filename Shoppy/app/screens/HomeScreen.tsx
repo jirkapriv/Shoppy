@@ -4,9 +4,9 @@ import JoinButton from '../components/JoinHomeButton';
 import CreateButton from '../components/CreateHomeButton';
 
 const HomeScreen = () => {
-  const [isJoined, setIsJoined] = useState(false);  
-    const handleJoinHome = () => {
+  const [isJoined, setIsJoined] = useState(false);
 
+  const handleJoinHome = () => {
     console.log('Join Home clicked');
     setIsJoined(true);
   };
@@ -18,14 +18,12 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Conditional message if user is not joined in a home */}
       {!isJoined && (
         <Text style={styles.message}>
           You are not in a home. Please join or create one.
         </Text>
       )}
 
-      {/* Buttons for joining or creating a home */}
       <JoinButton onPress={handleJoinHome} />
       <CreateButton onPress={handleCreateHome} />
     </View>

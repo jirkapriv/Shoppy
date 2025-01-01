@@ -1,8 +1,8 @@
-import React from 'react';
-import { Button, View, StyleSheet } from 'react-native';
+import React from "react";
+import { Button, View, StyleSheet } from "react-native";
 
 interface CreateButtonProps {
-  onPress: () => void; 
+  onPress: () => void; // Define the onPress function type
 }
 
 const CreateHomeButton: React.FC<CreateButtonProps> = ({ onPress }) => {
@@ -16,7 +16,7 @@ const CreateHomeButton: React.FC<CreateButtonProps> = ({ onPress }) => {
 const styles = StyleSheet.create({
   buttonContainer: {
     marginVertical: 10,
-    width: '80%',
+    width: "80%",
   },
 });
 

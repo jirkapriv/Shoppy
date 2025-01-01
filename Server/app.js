@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const dotenv = require("dotenv");
 dotenv.config()
+const cors = require("cors");
+
 /* mongoose  Connect*/
 
 const mongoose = require('mongoose');
@@ -36,7 +38,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(cors());
 app.use('/ds', indexRouter);
 app.use('/users', usersRouter);
 app.use('/', homesRouter);

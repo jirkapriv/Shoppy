@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import JoinButton from '../components/JoinHomeButton';
-import CreateButton from '../components/CreateHomeButton';
+import React, { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import JoinButton from "../components/JoinHomeButton";
+import CreateButton from "../components/CreateHomeButton";
 
-const HomeScreen = () => {
+interface HomeScreenProps {
+  navigation: any; // Add navigation prop type
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [isJoined, setIsJoined] = useState(false);
 
   const handleJoinHome = () => {
-    console.log('Join Home clicked');
+    console.log("Join Home clicked");
     setIsJoined(true);
   };
 
   const handleCreateHome = () => {
-    console.log('Create Home clicked');
-    setIsJoined(true);
+    console.log("Navigating to Create Home screen");
+    navigation.navigate("CreateHome"); // Navigate to the CreateHomeScreen
   };
 
   return (
@@ -33,15 +37,15 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
   },
   message: {
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 24,
-    color: 'gray',
+    color: "gray",
   },
 });
 

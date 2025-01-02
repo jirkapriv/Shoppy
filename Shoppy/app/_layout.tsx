@@ -4,37 +4,48 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./screens/HomeScreen";
 import DetailsScreen from "./screens/DetailsScreen";
 import SettingsScreen from "./screens/SettingsScreen";
-import CreateHomeScreen from "./screens/CreateHomeScreen"; // Import the new screen
-
+import CreateHomeScreen from "./screens/CreateHomeScreen"; 
+import Ionicons from '@expo/vector-icons/Ionicons';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-// Bottom Tabs Navigator
 const TabNavigator = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Details" component={DetailsScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+     <Tab.Screen name="Home" component={HomeScreen} options={{
+          title: 'Home',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
+          ),
+        }}/>
+      <Tab.Screen name="Details" component={DetailsScreen} options={{
+          title: 'About',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
+          ),
+        }}/>
+      <Tab.Screen name="Settings" component={SettingsScreen} options={{
+          title: 'About',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'settings-sharp' : 'settings-outline'} color={color} size={24}/>
+          ),
+        }}/> 
     </Tab.Navigator>
   );
 };
 
-// Stack Navigator (Wrapping the Tabs and Additional Screens)
 const Layout = () => {
   return (
     <Stack.Navigator>
-      {/* Bottom Tab Navigator */}
       <Stack.Screen
         name="Tabs"
         component={TabNavigator}
-        options={{ headerShown: false }} // Hide header for tabs
+        options={{ headerShown: false }} 
       />
-      {/* Additional Screens */}
       <Stack.Screen
         name="CreateHome"
         component={CreateHomeScreen}
-        options={{ title: "Create Home" }} // Customize header title
+        options={{ title: "Create Home" }} 
       />
     </Stack.Navigator>
   );

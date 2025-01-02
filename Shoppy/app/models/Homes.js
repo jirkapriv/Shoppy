@@ -25,31 +25,6 @@ export const createHome = async (formData) => {
   }
 };
 
-// Fetch all homes
-export const getAllHomes = async () => {
-  try {
-    const req = await fetch(`${API_BASE_URL}`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "GET",
-    });
-    const data = await req.json();
-    return {
-      status: req.status,
-      payload: data.payload,
-      msg: data.msg,
-    };
-  } catch (error) {
-    console.error("Error fetching homes:", error);
-    return {
-      status: 500,
-      msg: "Error connecting to the server",
-    };
-  }
-};
-
 // Fetch a specific home by ID
 export const getHomeById = async (id) => {
   try {

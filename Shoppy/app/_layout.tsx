@@ -5,14 +5,17 @@ import HomeScreen from "./screens/HomeScreen";
 import DetailsScreen from "./screens/DetailsScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import CreateHomeScreen from "./screens/CreateHomeScreen"; 
+import JoinHomeScreen from "./screens/JoinHomeScreen"; 
+import GroupStatsScreen from "./screens/GroupStatsScreen";
 import Ionicons from '@expo/vector-icons/Ionicons';
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const TabNavigator = () => {
   return (
     <Tab.Navigator>
-     <Tab.Screen name="Home" component={HomeScreen} options={{
+      <Tab.Screen name="Home" component={HomeScreen} options={{
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
@@ -25,11 +28,11 @@ const TabNavigator = () => {
           ),
         }}/>
       <Tab.Screen name="Settings" component={SettingsScreen} options={{
-          title: 'About',
+          title: 'Settings',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'settings-sharp' : 'settings-outline'} color={color} size={24}/>
           ),
-        }}/> 
+        }}/>
     </Tab.Navigator>
   );
 };
@@ -46,6 +49,16 @@ const Layout = () => {
         name="CreateHome"
         component={CreateHomeScreen}
         options={{ title: "Create Home" }} 
+      />
+      <Stack.Screen
+        name="JoinHome"
+        component={JoinHomeScreen}
+        options={{ title: "Join Home" }} 
+      />
+      <Stack.Screen
+        name="GroupInfo"
+        component={GroupStatsScreen}
+        options={{ title: "Group info" }} 
       />
     </Stack.Navigator>
   );

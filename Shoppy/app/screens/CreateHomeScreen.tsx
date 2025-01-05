@@ -1,37 +1,45 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createHome } from "../models/Homes";
 
 const CreateHomeScreen = ({ navigation }) => {
-  const [formData, setFormData] = useState({ name: "", passHash: "" });
-  const [passwordA, setPasswordA] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    passHash: "",
+    QR: "",
+  });
   const [info, setInfo] = useState("");
 
-  const handleChange = (name, value) => {
-    setFormData({ ...formData, [name]: value });
+  const handleCreateHome = async () => {
+    if (!formData.name || !formData.passHash) {
+      setInfo("Name and password are required!");
+      return;
+    }
+
+    try {
+      const response = await createHome(formData);
+      if (response.status === 201) {
+        // Save the created home to AsyncStorage
+        const createdHome = {
+          id: response.payload._id,
+          name: response.payload.name,
+        };
+        await AsyncStorage.setItem("homeData", JSON.stringify(createdHome));
+
+        // Redirect to the Home tab
+        navigation.navigate("Tabs");
+      } else {
+        setInfo(response.msg || "Error creating home. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error creating home:", error);
+      setInfo("Error connecting to the server. Please try again later.");
+    }
   };
 
-  const submit = async () => {
-    if (formData.name && formData.passHash) {
-      if (formData.passHash === passwordA) {
-        try {
-          const response = await createHome(formData);
-          if (response.status === 201) {
-            setInfo("Home created successfully!");
-            navigation.goBack(); // Navigate back to HomeScreen
-          } else {
-            setInfo(response.msg || "Error creating the home");
-          }
-        } catch (error) {
-          console.error("Error creating the home:", error);
-          setInfo("Error creating the home");
-        }
-      } else {
-        setInfo("Passwords do not match");
-      }
-    } else {
-      setInfo("Please fill out all required fields");
-    }
+  const handleChange = (key: string, value: string) => {
+    setFormData({ ...formData, [key]: value });
   };
 
   return (
@@ -53,13 +61,12 @@ const CreateHomeScreen = ({ navigation }) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Confirm password"
-        secureTextEntry
-        onChangeText={(value) => setPasswordA(value)}
-        value={passwordA}
+        placeholder="Enter QR code (optional)"
+        onChangeText={(value) => handleChange("QR", value)}
+        value={formData.QR}
       />
 
-      <Button title="Create Home" onPress={submit} color="#007BFF" />
+      <Button title="Create Home" onPress={handleCreateHome} color="#34C759" />
 
       {info ? <Text style={styles.info}>{info}</Text> : null}
     </View>
@@ -69,8 +76,8 @@ const CreateHomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     justifyContent: "center",
+    padding: 16,
   },
   title: {
     fontSize: 24,

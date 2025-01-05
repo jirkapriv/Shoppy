@@ -1,49 +1,39 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-import { getHomeById } from "../models/Homes"; 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getHomeById } from "../models/Homes";
 
 const JoinHomeScreen = ({ navigation }) => {
-  const [isLoaded, setLoaded] = useState(false);
+  const [homeId, setHomeId] = useState("");
   const [info, setInfo] = useState("");
-  const [formData, setFormData] = useState({ id: "" });
 
-  const submit = async () => {
+  const handleJoinHome = async () => {
     try {
-      const data = await getHomeById(formData.id);
-      if (data.status === 200) {
-        //setHome(data.payload);
-        setLoaded(true);
-
-        // Save the home ID locally
-        await AsyncStorage.setItem("userID", `${formData.id}`);
-        navigation.navigate("GroupInfo");
-      }else {
-        setInfo("Error fetching home.");
+      const response = await getHomeById(homeId);
+      if (response.status === 200) {
+        await AsyncStorage.setItem(
+          "homeData",
+          JSON.stringify({ id: homeId, name: response.payload.name })
+        );
+        navigation.navigate("Tabs"); // Redirect to the Home tab
+      } else {
+        setInfo("Home not found. Please check the ID.");
       }
     } catch (error) {
-      console.error("Error fetching home:", error);
-      setInfo("An error occurred while joining the home.");
+      setInfo("Error joining the home.");
     }
-  };
-
-  const handleChange = (id, value) => {
-    setFormData({ ...formData, [id]: value });
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Join Home</Text>
-
       <TextInput
         style={styles.input}
         placeholder="Enter home ID"
-        onChangeText={(value) => handleChange("id", value)}
-        value={formData.id}
+        value={homeId}
+        onChangeText={setHomeId}
       />
-
-      <Button title="Join Home" onPress={submit} color="#007BFF" />
-
+      <Button title="Join Home" onPress={handleJoinHome} color="#007BFF" />
       {info ? <Text style={styles.info}>{info}</Text> : null}
     </View>
   );
@@ -52,14 +42,13 @@ const JoinHomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     justifyContent: "center",
+    padding: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    textAlign: "center",
   },
   input: {
     borderWidth: 1,
@@ -70,8 +59,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   info: {
-    marginTop: 20,
-    textAlign: "center",
+    marginTop: 10,
     color: "red",
   },
 });

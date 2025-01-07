@@ -59,13 +59,6 @@ const CreateHomeScreen = ({ navigation }) => {
         onChangeText={(value) => handleChange("passHash", value)}
         value={formData.passHash}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter QR code (optional)"
-        onChangeText={(value) => handleChange("QR", value)}
-        value={formData.QR}
-      />
-
       <Button title="Create Home" onPress={handleCreateHome} color="#34C759" />
 
       {info ? <Text style={styles.info}>{info}</Text> : null}

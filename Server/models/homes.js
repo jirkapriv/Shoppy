@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const homeSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  passHash: { type: String, required: true },
+  passHash: { type: String, required: false },
   QR: { type: String },
   Lists: {
     type: Map,

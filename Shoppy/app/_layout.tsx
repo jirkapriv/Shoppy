@@ -7,12 +7,13 @@ import SettingsScreen from "./screens/SettingsScreen";
 import CreateHomeScreen from "./screens/CreateHomeScreen";
 import JoinHomeScreen from "./screens/JoinHomeScreen";
 import GroupStatsScreen from "./screens/GroupStatsScreen";
-import ListDetailsScreen from "./screens/ListDetailsScreen"; // Import ListDetailsScreen
+import ListDetailsScreen from "./screens/ListDetailsScreen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+// Tab Navigator
 const TabNavigator = () => {
   return (
     <Tab.Navigator>
@@ -62,14 +63,18 @@ const TabNavigator = () => {
   );
 };
 
+// Stack Navigator
 const Layout = () => {
   return (
     <Stack.Navigator>
+      {/* Main Tab Screens */}
       <Stack.Screen
         name="Tabs"
         component={TabNavigator}
         options={{ headerShown: false }}
       />
+
+      {/* Standalone Screens */}
       <Stack.Screen
         name="CreateHome"
         component={CreateHomeScreen}
@@ -86,7 +91,7 @@ const Layout = () => {
         options={{ title: "Group Info" }}
       />
       <Stack.Screen
-        name="ListDetails" // Add the ListDetails screen
+        name="ListDetails"
         component={ListDetailsScreen}
         options={({ route }) => ({ title: route.params.listName || "List Details" })}
       />

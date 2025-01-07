@@ -7,7 +7,10 @@ exports.getHomeByID = async (req, res) => {
     if (home) {
       return res.status(200).send({
         msg: "Home found",
-        payload: home,
+        payload: {
+          ...home.toObject(),
+          Lists: Object.fromEntries(home.Lists), // Convert Map to Object
+        },
       });
     }
     return res.status(404).send({ msg: "Home not found" });
@@ -22,15 +25,14 @@ exports.getAllLists = async (req, res) => {
   try {
     const home = await Home.findById(req.params.id);
     if (home) {
-      const listsObject = Object.fromEntries(home.Lists); // Convert Map to Object
       return res.status(200).send({
         msg: "Lists found",
-        payload: listsObject,
+        payload: Object.fromEntries(home.Lists), // Convert Map to Object
       });
     }
     res.status(404).send({ msg: "Home not found" });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching lists:", error);
     res.status(500).send({ msg: "Error fetching lists", error });
   }
 };
@@ -50,7 +52,7 @@ exports.getListByID = async (req, res) => {
     }
     res.status(404).send({ msg: "List not found" });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching the list:", error);
     res.status(500).send({ msg: "Error fetching the list", error });
   }
 };
@@ -63,16 +65,18 @@ exports.createList = async (req, res) => {
       if (home.Lists.has(req.body.listName)) {
         return res.status(400).send({ msg: "List with this name already exists" });
       }
-      home.Lists.set(req.body.listName, req.body.items || []); // Add new list
+
+      home.Lists.set(req.body.listName, req.body.items || []); // Create new list
       const result = await home.save();
+
       return res.status(201).send({
-        msg: "List created",
-        payload: Object.fromEntries(result.Lists),
+        msg: "List created successfully",
+        payload: Object.fromEntries(result.Lists), // Return updated lists
       });
     }
     res.status(404).send({ msg: "Home not found" });
   } catch (error) {
-    console.error(error);
+    console.error("Error creating list:", error);
     res.status(500).send({ msg: "Error creating the list", error });
   }
 };
@@ -87,14 +91,14 @@ exports.updateList = async (req, res) => {
         home.Lists.set(req.params.listId, req.body.items); // Update list items
         const result = await home.save();
         return res.status(200).send({
-          msg: "List updated",
-          payload: result.Lists.get(req.params.listId),
+          msg: "List updated successfully",
+          payload: result.Lists.get(req.params.listId), // Return updated list
         });
       }
     }
     res.status(404).send({ msg: "List not found" });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating the list:", error);
     res.status(500).send({ msg: "Error updating the list", error });
   }
 };
@@ -108,14 +112,14 @@ exports.deleteListByID = async (req, res) => {
         home.Lists.delete(req.params.listId); // Remove the list
         const result = await home.save();
         return res.status(200).send({
-          msg: "List deleted",
-          payload: Object.fromEntries(result.Lists),
+          msg: "List deleted successfully",
+          payload: Object.fromEntries(result.Lists), // Return updated lists
         });
       }
     }
     res.status(404).send({ msg: "List not found" });
   } catch (error) {
-    console.error(error);
+    console.error("Error deleting the list:", error);
     res.status(500).send({ msg: "Error deleting the list", error });
   }
 };
@@ -134,14 +138,14 @@ exports.addItemToList = async (req, res) => {
         home.Lists.set(req.params.listId, list);
         const result = await home.save();
         return res.status(200).send({
-          msg: "Item added to list",
-          payload: result.Lists.get(req.params.listId),
+          msg: "Item added successfully",
+          payload: result.Lists.get(req.params.listId), // Return updated list
         });
       }
     }
     res.status(404).send({ msg: "List not found" });
   } catch (error) {
-    console.error(error);
+    console.error("Error adding item to the list:", error);
     res.status(500).send({ msg: "Error adding item to the list", error });
   }
 };
@@ -160,14 +164,14 @@ exports.deleteItemFromList = async (req, res) => {
         home.Lists.set(req.params.listId, updatedList);
         const result = await home.save();
         return res.status(200).send({
-          msg: "Item removed from list",
-          payload: result.Lists.get(req.params.listId),
+          msg: "Item removed successfully",
+          payload: result.Lists.get(req.params.listId), // Return updated list
         });
       }
     }
     res.status(404).send({ msg: "List not found" });
   } catch (error) {
-    console.error(error);
+    console.error("Error removing item from the list:", error);
     res.status(500).send({ msg: "Error removing item from the list", error });
   }
 };
@@ -188,10 +192,9 @@ exports.createHome = async (req, res) => {
         payload: result,
       });
     }
-
     res.status(500).send({ msg: "Failed to create home" });
   } catch (error) {
-    console.error(error);
+    console.error("Error creating home:", error);
     res.status(500).send({ msg: "Error creating home", error });
   }
 };
